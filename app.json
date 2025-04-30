@@ -12,10 +12,14 @@
       "supportsTablet": true
     },
     "android": {
+      "enablePngCrunchInReleaseBuilds": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.saptak_hazra.hermes",
+      "googleServicesFile": "./google-services.json"
+      
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "617a91f5-40a7-4437-a687-e3db1f177b04"
+      }
     }
   }
 }
