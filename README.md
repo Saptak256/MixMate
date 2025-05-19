@@ -1,50 +1,40 @@
-# Welcome to your Expo app 👋
+# 🍹 MixMate
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**MixMate** is an AI-powered mobile app that generates personalized **cocktail** and **mocktail** recipes based on your mood, taste preferences, and available ingredients. Whether you're looking to wind down or celebrate, MixMate curates the perfect drink — tailored just for you.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+- 🔞 **Age-Based Access Control**  
+  - On first sign-up, users are asked if they are of legal drinking age.  
+  - Users **underage** are shown **mocktail-only** options.  
+  - Users **of legal age** can explore both **cocktail and mocktail** recipes.
 
-2. Start the app
+- 🧠 **AI-Generated Recipes**  
+  - Input your mood, taste preferences (sweet, sour, fruity, etc.), ingredients, and (for cocktails) alcohol type.  
+  - The AI suggests creative, customized drink recipes in real-time.
 
-   ```bash
-    npx expo start
-   ```
+- 🍒 **Ingredient-Aware Suggestions**  
+  - Generate drinks based on what you already have at home — no bar experience needed.
 
-In the output, you'll find options to open the app in a
+- ⭐ **Save & Favorite Recipes**  
+  - Bookmark your favorite drinks to revisit them anytime.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- 📤 **Share Recipes as PDFs**  
+  - Easily generate a **PDF version** of any recipe and share it with friends.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- 📲 **Smooth Mobile Experience**  
+  - Built for a clean and intuitive interface using React Native and Expo.
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🛠️ Tech Stack
 
-```bash
-npm run reset-project
-```
+- ⚛️ **React Native (Expo)** — Cross-platform mobile app development
+- 🔐 **Firebase** — User authentication and real-time database
+- ☁️ **Cloudinary** — Cloud image storage and management
+- 🤖 **OpenRouter API** — AI model integration for generating recipes
+- 📄 **PDF Generation & Sharing** — For exporting and sharing drink recipes
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
