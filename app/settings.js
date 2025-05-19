@@ -1,120 +1,162 @@
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal, TextInput } from "react-native";
-import { useNavigation } from "expo-router";
-import { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-import { getAuth, deleteUser } from "firebase/auth";
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+  Switch,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { auth, firestore } from '../firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-const db = getFirestore();
-const auth = getAuth();
-
-export default function SettingsScreen() {
-  const navigation = useNavigation();
+const Settings = () => {
+  const router = useRouter();
   const user = auth.currentUser;
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState("");
-  const [theme, setTheme] = useState("light");
+  const [nickname, setNickname] = useState('');
+  const [newNickname, setNewNickname] = useState('');
+  const [isOfLegalAge, setIsOfLegalAge] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      const userRef = doc(db, "users", user.uid);
-      getDoc(userRef).then((docSnap) => {
+    const fetchUserData = async () => {
+      try {
+        const userRef = doc(firestore, 'users', user.uid);
+        const docSnap = await getDoc(userRef);
         if (docSnap.exists()) {
-          setNickname(docSnap.data().nickname || "");
+          const data = docSnap.data();
+          setNickname(data.nickname || '');
+          setNewNickname(data.nickname || '');
+          setIsOfLegalAge(data.userAgeVerified || false);
         }
-      });
-    }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    if (user) fetchUserData();
   }, []);
 
-  const handleNicknameSave = async () => {
-    if (!nickname.trim()) {
-      Alert.alert("Nickname cannot be empty");
-      return;
-    }
+  const handleSaveNickname = async () => {
     try {
-      await setDoc(doc(db, "users", user.uid), { nickname }, { merge: true });
-      Alert.alert("Success", "Nickname updated!");
-      setModalVisible(false);
+      const userRef = doc(firestore, 'users', user.uid);
+      await updateDoc(userRef, { nickname: newNickname });
+      setNickname(newNickname);
+      Alert.alert('Success', 'Nickname updated!');
     } catch (error) {
-      Alert.alert("Error", error.message);
+      Alert.alert('Error', 'Failed to update nickname: ' + error.message);
     }
   };
 
-  
-  const handleDeleteAccount = () => {
-    Alert.alert("Confirm Delete", "Are you sure you want to permanently delete your account?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await deleteUser(user);
-            Alert.alert("Deleted", "Account deleted successfully.");
-            navigation.replace("/signin");
-          } catch (error) {
-            Alert.alert("Error", error.message);
-          }
-        },
-      }
-    ]);
+  const handleToggleAgeConfirmation = async () => {
+    try {
+      const userRef = doc(firestore, 'users', user.uid);
+      await updateDoc(userRef, { userAgeVerified: !isOfLegalAge });
+      setIsOfLegalAge((prev) => !prev);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update age status: ' + error.message);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Settings</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Image source={require('../assets/back.png')} style={styles.backIcon} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Settings</Text>
+      </View>
 
-      <TouchableOpacity style={styles.option} onPress={() => setModalVisible(true)}>
-        <Text style={styles.optionText}>Change Nickname</Text>
-      </TouchableOpacity>
+      {/* Nickname Section */}
+      <View style={styles.section}>
+        <Text style={styles.label}>Change Nickname:</Text>
+        <TextInput
+          style={styles.input}
+          value={newNickname}
+          onChangeText={setNewNickname}
+          placeholder="Enter new nickname"
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSaveNickname}>
+          <Text style={styles.buttonText}>Save Nickname</Text>
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity style={styles.option} onPress={handleDeleteAccount}>
-        <Text style={[styles.optionText, { color: "#FF3B30" }]}>Delete Account</Text>
-      </TouchableOpacity>
-
-      {/* Nickname Modal */}
-      <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Edit Nickname</Text>
-            <TextInput
-              value={nickname}
-              onChangeText={setNickname}
-              style={styles.input}
-              placeholder="Enter nickname"
-            />
-            <TouchableOpacity style={styles.saveButton} onPress={handleNicknameSave}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={{ color: "#999", marginTop: 10 }}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+      {/* Legal Age Toggle */}
+      <View style={styles.section}>
+        <Text style={styles.label}>Confirm Legal Drinking Age:</Text>
+        <View style={styles.switchRow}>
+          <Switch value={isOfLegalAge} onValueChange={handleToggleAgeConfirmation} />
+          <Text style={styles.switchLabel}>
+            {isOfLegalAge ? 'Confirmed' : 'Not Confirmed'}
+          </Text>
         </View>
-      </Modal>
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#E3F2FD", padding: 20 },
-  header: { fontSize: 24, fontWeight: "bold", marginBottom: 20, color: "#1E88E5" },
-  option: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+  container: {
+    flex: 1,
+    backgroundColor: '#E0EAFC',
+    padding: 20,
   },
-  optionText: { fontSize: 16, color: "#333" },
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" },
-  modalContainer: { backgroundColor: "#fff", borderRadius: 10, padding: 20, width: "80%", alignItems: "center" },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 8, padding: 10, width: "100%", marginBottom: 15 },
-  saveButton: { backgroundColor: "#4A6FFF", padding: 12, borderRadius: 8, width: "100%" },
-  saveButtonText: { color: "#fff", textAlign: "center", fontSize: 16 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  backIcon: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#34495E',
+  },
+  section: {
+    marginBottom: 30,
+  },
+  label: {
+    fontSize: 18,
+    color: '#2C3E50',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#4A6FFF',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  switchLabel: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#2C3E50',
+  },
 });
+
+export default Settings;

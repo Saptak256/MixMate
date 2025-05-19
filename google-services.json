@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "544001677849",
-    "project_id": "fir-chat-813b9",
-    "storage_bucket": "fir-chat-813b9.firebasestorage.app"
+    "project_number": "659568014590",
+    "project_id": "mixos-72ae4",
+    "storage_bucket": "mixos-72ae4.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:544001677849:android:7dbbd430da0f02f19ea888",
+        "mobilesdk_app_id": "1:659568014590:android:968277478dc099780da1af",
         "android_client_info": {
-          "package_name": "com.saptak_hazra.hermes"
+          "package_name": "com.saptak_hazra.mixmate"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCbnjASKv6zHhrcfSvn2j-L5kBI7Wa6LX4"
+          "current_key": "AIzaSyAHJSM6vOvZPAusKm4TyVWx2mOYwQXj_jg"
         }
       ],
       "services": {

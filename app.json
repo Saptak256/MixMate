@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "auth-testing",
+    "name": "MixMate",
     "slug": "auth-testing",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/mixlogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,10 +14,10 @@
     "android": {
       "enablePngCrunchInReleaseBuilds": false,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/mixlogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.saptak_hazra.hermes",
+      "package": "com.saptak_hazra.mixmate",
       "googleServicesFile": "./google-services.json"
       
     },
